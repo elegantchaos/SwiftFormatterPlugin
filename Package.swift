@@ -14,13 +14,6 @@ let package = Package(
     ],
     
     products: [
-        .library(
-            name: "SwiftFormatterPluginDefaults",
-            targets: [
-                "SwiftFormatterPluginDefaults"
-            ]
-        ),
-        
         .plugin(
             name: "SwiftFormatterPlugin",
             targets: [

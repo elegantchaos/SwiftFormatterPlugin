@@ -14,11 +14,11 @@ struct FormatterPlugin: CommandPlugin {
         let swiftFormatExec = URL(fileURLWithPath: swiftFormatTool.path.string)
         
         var baseArguments: [String] = []
-//        let fm = FileManager.default
-//        let configFile = context.package.directory.appending(".swift-format.json").string
-//        if fm.fileExists(atPath: configFile) {
-//            baseArguments.append(contentsOf: ["--config", "\(configFile)"])
-//        }
+
+        let configFile = context.package.directory.appending(".swiftformat").string
+        if !FileManager.default.fileExists(atPath: configFile) {
+            baseArguments.append(contentsOf: ["--config", defaultConfigPath])
+        }
 
 
         for target in context.package.targets {
@@ -40,5 +40,20 @@ struct FormatterPlugin: CommandPlugin {
                 Diagnostics.error("swift-format invocation failed: \(problem)")
             }
         }
+    }
+    
+    var defaultConfigPath: String {
+        let path = ("~/.swiftformat" as NSString).expandingTildeInPath
+        if !FileManager.default.fileExists(atPath: path) {
+            let defaultConfig = """
+                # Place your default swift-format configuration options here.
+                # See https://github.com/nicklockwood/SwiftFormat#config-file for more details.
+
+                """
+            
+            try? defaultConfig.write(toFile: path, atomically: true, encoding: .utf8)
+        }
+
+        return path
     }
 }
