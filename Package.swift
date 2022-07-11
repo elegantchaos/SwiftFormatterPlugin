@@ -14,6 +14,13 @@ let package = Package(
     ],
     
     products: [
+        .library(
+            name: "SwiftFormatterPluginDefaults",
+            targets: [
+                "SwiftFormatterPluginDefaults"
+            ]
+        ),
+        
         .plugin(
             name: "SwiftFormatterPlugin",
             targets: [
@@ -27,9 +34,17 @@ let package = Package(
     ],
     
     targets: [
+        .target(
+            name: "SwiftFormatterPluginDefaults",
+            
+            resources: [
+                .copy("Resources/default-config")
+            ]
+        ),
+        
         .plugin(
             name: "SwiftFormatterPlugin",
-            
+        
             capability: .command(
                 intent: .sourceCodeFormatting(),
                 
@@ -38,7 +53,9 @@ let package = Package(
                 ]
             ),
             
+        
             dependencies: [
+                "SwiftFormatterPluginDefaults",
                 .product(name: "swiftformat", package: "SwiftFormat"),
             ]
         ),

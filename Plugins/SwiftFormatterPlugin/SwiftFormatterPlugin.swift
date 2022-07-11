@@ -5,6 +5,7 @@
 
 import Foundation
 import PackagePlugin
+import SwiftFormatterPluginDefaults
 
 @main
 struct FormatterPlugin: CommandPlugin {
@@ -12,19 +13,24 @@ struct FormatterPlugin: CommandPlugin {
     func performCommand(context: PluginContext, arguments: [String]) throws {
         let swiftFormatTool = try context.tool(named: "swiftformat")
         let swiftFormatExec = URL(fileURLWithPath: swiftFormatTool.path.string)
-        //        let configFile = context.package.directory.appending(".swift-format.json")
         
+        var baseArguments: [String] = []
+        let fm = FileManager.default
+//        let configFile = context.package.directory.appending(".swift-format.json").string
+//        if fm.fileExists(atPath: configFile) {
+//            baseArguments.append(contentsOf: ["--config", "\(configFile)"])
+//        }
+
+
         for target in context.package.targets {
             guard let target = target as? SourceModuleTarget else { continue }
-            
+
+            var arguments = baseArguments
+            arguments.append(target.directory.string)
+
             let process = Process()
             process.executableURL = swiftFormatExec
-            process.arguments = [
-                //                "--configuration", "\(configFile)",
-                "--in-place",
-                "--recursive",
-                "\(target.directory)",
-            ]
+            process.arguments = arguments
             try process.run()
             process.waitUntilExit()
             
