@@ -16,8 +16,8 @@ struct FormatterPlugin: CommandPlugin {
         var baseArguments: [String] = []
 
         let configFile = context.package.directory.appending(".swiftformat").string
-        if !FileManager.default.fileExists(atPath: configFile) {
-            baseArguments.append(contentsOf: ["--config", defaultConfigPath])
+        if !FileManager.default.fileExists(atPath: configFile), let defaultPath = defaultConfigPath {
+            baseArguments.append(contentsOf: ["--config", defaultPath])
         }
 
 
@@ -42,7 +42,7 @@ struct FormatterPlugin: CommandPlugin {
         }
     }
     
-    var defaultConfigPath: String {
+    var defaultConfigPath: String? {
         let path = ("~/.swiftformat" as NSString).expandingTildeInPath
         if !FileManager.default.fileExists(atPath: path) {
             let defaultConfig = """
@@ -51,7 +51,12 @@ struct FormatterPlugin: CommandPlugin {
 
                 """
             
-            try? defaultConfig.write(toFile: path, atomically: true, encoding: .utf8)
+            do {
+                try defaultConfig.write(toFile: path, atomically: true, encoding: .utf8)
+            } catch {
+                print(error)
+                return nil
+            }
         }
 
         return path
