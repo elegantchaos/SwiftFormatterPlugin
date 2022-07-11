@@ -5,7 +5,6 @@
 
 import Foundation
 import PackagePlugin
-import SwiftFormatterPluginDefaults
 
 @main
 struct FormatterPlugin: CommandPlugin {
@@ -15,7 +14,7 @@ struct FormatterPlugin: CommandPlugin {
         let swiftFormatExec = URL(fileURLWithPath: swiftFormatTool.path.string)
         
         var baseArguments: [String] = []
-        let fm = FileManager.default
+//        let fm = FileManager.default
 //        let configFile = context.package.directory.appending(".swift-format.json").string
 //        if fm.fileExists(atPath: configFile) {
 //            baseArguments.append(contentsOf: ["--config", "\(configFile)"])

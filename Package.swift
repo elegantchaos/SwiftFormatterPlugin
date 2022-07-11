@@ -34,14 +34,6 @@ let package = Package(
     ],
     
     targets: [
-        .target(
-            name: "SwiftFormatterPluginDefaults",
-            
-            resources: [
-                .copy("Resources/default-config")
-            ]
-        ),
-        
         .plugin(
             name: "SwiftFormatterPlugin",
         
@@ -55,7 +47,6 @@ let package = Package(
             
         
             dependencies: [
-                "SwiftFormatterPluginDefaults",
                 .product(name: "swiftformat", package: "SwiftFormat"),
             ]
         ),
