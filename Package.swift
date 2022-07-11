@@ -23,6 +23,7 @@ let package = Package(
     ],
     
     dependencies: [
+        .package(url: "https://github.com/nicklockwood/SwiftFormat", from: "0.41.2")
     ],
     
     targets: [
@@ -30,17 +31,15 @@ let package = Package(
             name: "SwiftFormatterPlugin",
             
             capability: .command(
-                intent: .custom(
-                    verb: "command",
-                    description: "command description"
-                ),
+                intent: .sourceCodeFormatting(),
                 
                 permissions: [
-                    .writeToPackageDirectory(reason: "write reason")
+                    .writeToPackageDirectory(reason: "This command reformats source files.")
                 ]
             ),
             
             dependencies: [
+                .product(name: "swiftformat", package: "SwiftFormat"),
             ]
         ),
     ]
