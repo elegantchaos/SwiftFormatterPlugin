@@ -100,24 +100,21 @@ extension FormatterPlugin: XcodeCommandPlugin {
 //            baseArguments.append(contentsOf: ["--swiftversion", version])
 //        }
         
-        for target in context.xcodeProject.targets {
-            guard let target = target as? SourceModuleTarget else { continue }
-            
-            var arguments = baseArguments
-            arguments.append(target.directory.string)
-            
-            let process = Process()
-            process.executableURL = swiftFormatExec
-            process.arguments = arguments
-            try process.run()
-            process.waitUntilExit()
-            
-            if process.terminationReason == .exit && process.terminationStatus == 0 {
-                Diagnostics.remark("Formatted the source code in \(target.directory).")
-            } else {
-                let problem = "\(process.terminationReason):\(process.terminationStatus)"
-                Diagnostics.error("swift-format invocation failed: \(problem)")
-            }
+        var arguments = baseArguments
+        let path = context.xcodeProject.directory.string
+        arguments.append(path)
+        
+        let process = Process()
+        process.executableURL = swiftFormatExec
+        process.arguments = arguments
+        try process.run()
+        process.waitUntilExit()
+        
+        if process.terminationReason == .exit && process.terminationStatus == 0 {
+            Diagnostics.remark("Formatted the source code in \(path).")
+        } else {
+            let problem = "\(process.terminationReason):\(process.terminationStatus)"
+            Diagnostics.error("swift-format invocation failed: \(problem)")
         }
     }
 }
